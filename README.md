@@ -1,4 +1,5 @@
 # math-mini-game
+App based on this game: https://www.tiktok.com/@chriskotra/video/7154986619806715138?is_copy_url=1&is_from_webapp=v1
 
 ## Project setup
 ```
