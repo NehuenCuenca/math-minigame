@@ -13,16 +13,14 @@
       @saveAnswer="saveAnswer"
     />
 
-    <li class="option" @click="startNewGame" v-if="!win && !lose">
-      Empezar otro juego
-    </li>
+    <InGameOptions v-if="!win && !lose" @receiveGameOption="runGameOption" />
   </form>
 
   <div v-if="win || lose">
     <h2 v-if="win" class="green">Ganaste! Acertaste todas las cuentas 🤯🤯</h2>
     <h2 v-if="lose" class="red">Perdiste! Fallaste en alguna cuenta 😅</h2>
-    <li class="option" @click="startNewGame">Jugar otra vez</li>
-    <li class="option" @click="goToMenu">Ir al menu</li>
+    
+    <InGameOptions @receiveGameOption="runGameOption" />
   </div>
 </template>
 
@@ -33,11 +31,12 @@ import {
   generateSubtraction,
 } from "@/helpers/Exercise";
 import Exercise from "@/components/Exercise";
+import InGameOptions from "@/components/InGameOptions";
 
 export default {
   name: "MathGame",
 
-  components: { Exercise },
+  components: { Exercise, InGameOptions },
 
   props: {
     quantityExercises: {
@@ -61,6 +60,9 @@ export default {
   emits: ["finishGame"],
 
   methods: {
+    runGameOption( callback ) {
+      this[callback]()
+    },
     goToMenu() {
       this.lose = false;
       this.win = false;
@@ -160,7 +162,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 form {
   width: 40%;
   display: flex;
@@ -180,5 +182,13 @@ form {
 }
 .yellow {
   color: rgb(210, 210, 4);
+}
+
+ul {
+  margin: 0;
+  padding: .5rem;
+  display: flex;
+  flex-direction: column;
+  row-gap: 2vh;
 }
 </style>

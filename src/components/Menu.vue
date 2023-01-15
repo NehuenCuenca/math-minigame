@@ -37,7 +37,7 @@ export default {
   methods: {
     finishGame(){
       this.newGame = false
-     },
+    },
     startNewGame() {
         this.showTutorial = false;
       this.newGame = !this.newGame;
