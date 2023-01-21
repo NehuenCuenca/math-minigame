@@ -44,7 +44,7 @@ html {
   min-height: 100vh;
   background: lightsteelblue fixed center;
   background-size: cover;
-  padding: 12% 0 5% 0;
+  padding: 5% 0 5% 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

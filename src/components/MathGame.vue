@@ -19,7 +19,7 @@
   <div v-if="win || lose">
     <h2 v-if="win" class="green">Ganaste! Acertaste todas las cuentas 🤯🤯</h2>
     <h2 v-if="lose" class="red">Perdiste! Fallaste en alguna cuenta 😅</h2>
-    
+
     <InGameOptions @receiveGameOption="runGameOption" />
   </div>
 </template>
@@ -60,8 +60,8 @@ export default {
   emits: ["finishGame"],
 
   methods: {
-    runGameOption( callback ) {
-      this[callback]()
+    runGameOption(callback) {
+      this[callback]();
     },
     goToMenu() {
       this.lose = false;
@@ -110,7 +110,8 @@ export default {
       this.hideExercise(id);
 
       if (this.exercises[id + 1]) {
-        return this.showExercise(id + 1);
+        this.showExercise(id + 1);
+        return;
       }
 
       this.finishGame();
@@ -173,7 +174,7 @@ form {
 
 #timer {
   font-size: 3rem;
-  text-shadow: 1px 1px 15px black;
+  text-shadow: 3px 3px 5px black;
   user-select: none;
 }
 
@@ -186,7 +187,7 @@ form {
 
 ul {
   margin: 0;
-  padding: .5rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   row-gap: 2vh;

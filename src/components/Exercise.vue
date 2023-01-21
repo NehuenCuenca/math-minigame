@@ -1,7 +1,12 @@
 <template>
   <label class="exercise" v-show="visible && !isAnswered">
     <span>{{ operationWithEqual }}</span>
-    <input type="text" v-model.number="answer" @keypress.enter="saveAnswer" :ref="`input${id}`"/>
+    <input
+      type="text"
+      v-model.number="answer"
+      @keypress.enter="saveAnswer"
+      :ref="`exercise${id}`"
+    />
     <button id="erase" @click.prevent="clearInput">Limpiar</button>
   </label>
 </template>
@@ -26,15 +31,22 @@ export default {
     };
   },
   methods: {
-    clearInput(){
-      this.answer = ''
+    clearInput() {
+      this.answer = "";
     },
     saveAnswer() {
       const { answer, id } = this;
-      
+
       this.$emit("saveAnswer", { answer, id });
       this.isAnswered = true;
     },
+    setFocus() {
+      const input = this.$refs[`exercise${this.id}`];
+      this.$nextTick(() => this.$refs[`exercise${this.id}`].focus());
+    },
+  },
+  mounted() {
+    this.setFocus();
   },
   computed: {
     operationWithEqual() {
@@ -45,7 +57,12 @@ export default {
     operation() {
       this.isAnswered = false;
       this.answer = null;
-    }
+    },
+    visible() {
+      if (!this.isAnswered && this.visible) {
+        this.setFocus();
+      }
+    },
   },
 };
 </script>
@@ -63,11 +80,13 @@ export default {
 }
 
 .exercise span {
-  font-size: 1.7rem;
+  font-size: 3rem;
 }
 
 .exercise input {
-  font-size: 1.3rem;
+  width: 80%;
+  height: 10rem;
+  font-size: 5rem;
   text-align: center;
   padding: 0.7rem;
   border: none;
@@ -79,13 +98,13 @@ export default {
   display: none;
 }
 
-button#erase{
+button#erase {
   font-size: 1.3rem;
   padding: 1rem 5rem;
   cursor: pointer;
 }
-button#erase:hover{
-  transition: all .3s ease;
+button#erase:hover {
+  transition: all 0.3s ease;
   background-color: red;
   color: white;
 }

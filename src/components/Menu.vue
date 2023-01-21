@@ -13,7 +13,7 @@
     <p> 
         <u>Controles:</u>
         <ul>
-            <li>Apretá la tecla TAB o tabulador (esta arriba del block mayusc) para que no tengas que clickear en la caja de texto cada vez que vas a responder</li>
+            <!-- <li>Apretá la tecla TAB o tabulador (esta arriba del block mayusc) para que no tengas que clickear en la caja de texto cada vez que vas a responder</li> -->
             <li>Para guardar tu respuesta y continuar con la siguiente cuenta tenes que apretar la tecla ENTER</li>
         </ul>
     </p>
