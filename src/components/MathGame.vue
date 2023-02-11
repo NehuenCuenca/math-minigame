@@ -1,5 +1,5 @@
 <template>
-  <form v-if="!win || !lose">
+  <form v-if="!isGameFinished">
     <h1 id="timer" :class="seconds < 14 ? 'green' : 'yellow'">
       {{ seconds }}"
     </h1>
@@ -13,13 +13,28 @@
       @saveAnswer="saveAnswer"
     />
 
-    <InGameOptions v-if="!win && !lose" @receiveGameOption="runGameOption" />
+    <InGameOptions v-if="!isGameFinished" @receiveGameOption="runGameOption" />
   </form>
 
-  <div v-if="win || lose">
-    <h2 v-if="win" class="green">Ganaste! Acertaste todas las cuentas 🤯🤯</h2>
-    <h2 v-if="lose" class="red">Perdiste! Fallaste en alguna cuenta 😅</h2>
-
+  <div v-if="isGameFinished" id="end-game">
+    <div class="info">
+      <h2>CalculosX{{ quantityExercises }}</h2>
+      <div class="block">
+        <span class="block-sub-title">Tiempo usado</span>
+        <span class="block-value">{{ seconds }} segundos</span>
+      </div>
+      <div class="block">
+        <span class="block-sub-title">Penalizacion</span>
+        <span class="block-value">
+          Errores: {{ missedExercises }} x 5sec. =
+          {{ missedExercises * 5 }}</span
+        >
+      </div>
+      <div class="block">
+        <span class="block-sub-title">Tiempo total</span>
+        <span class="block-value">{{ totalTime }} segundos</span>
+      </div>
+    </div>
     <InGameOptions @receiveGameOption="runGameOption" />
   </div>
 </template>
@@ -50,22 +65,21 @@ export default {
     return {
       operations: ["sum", "subtraction", "multiplication"],
       exercises: [],
-      win: false,
-      lose: false,
+      missedExercises: 0,
+      totalTime: 0,
       timer: null,
       seconds: 0,
+      isGameFinished: false,
     };
   },
 
   emits: ["finishGame"],
 
   methods: {
-    runGameOption(callback) {
-      this[callback]();
+    runGameOption(option) {
+      this[option]();
     },
     goToMenu() {
-      this.lose = false;
-      this.win = false;
       this.exercises = [];
       this.$emit("finishGame", true);
     },
@@ -123,26 +137,24 @@ export default {
       this.exercises[id].visible = false;
     },
     checkResults() {
-      const results = this.exercises.map(
-        ({ operation, answer }) => eval(operation) === answer
-      );
+      const results = this.exercises.map(({ operation, answer }) => {
+        const result = eval(operation) === answer;
+        if (!result) {
+          this.missedExercises++;
+        }
+        return result;
+      });
 
-      if (results.includes(false)) {
-        this.win = false;
-        this.lose = true;
-      } else {
-        this.win = true;
-        this.lose = false;
-      }
+      this.totalTime = this.seconds + this.missedExercises * 5;
     },
     finishGame() {
+      this.isGameFinished = true;
       this.checkResults();
       this.stopTimer();
     },
     startNewGame() {
-      this.finishGame();
-      this.lose = false;
-      this.win = false;
+      this.stopTimer();
+      this.isGameFinished = false;
       this.exercises = [];
       this.generateExercises();
     },
@@ -191,5 +203,52 @@ ul {
   display: flex;
   flex-direction: column;
   row-gap: 2vh;
+}
+
+#end-game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 4vh;
+}
+
+#end-game h2 {
+margin: 0;
+text-decoration: underline;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 2vh;
+}
+
+.block {
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 1rem;
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 2vh;
+}
+
+.block-sub-title {
+  color: white;
+  font-size: 1.5rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.block-sub-title:nth-child(1) {
+  background-color: grey;
+}
+
+.block-value {
+  font-size: 1.3rem;
 }
 </style>
