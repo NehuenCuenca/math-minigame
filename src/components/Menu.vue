@@ -4,14 +4,20 @@
     <li class="option" @click="toggleTutorial">Tutorial</li>
   </ul>
 
-  <MathGame :quantityExercises="quantityExercises" v-if="newGame" @finishGame="finishGame" />
+  
+
+  <MathGame
+    :quantityExercises="quantityExercises"
+    v-if="newGame"
+    @finishGame="finishGame"
+  />
 
   <div v-if="showTutorial" id="tutorial">
     <button @click="toggleTutorial">Volver al menú</button>
     <h2>🔢⭐Minijuego de matematicas⭐🔢</h2>
     <p>
-      El juego consiste en resolver {{quantityExercises}} cuentas aleatorias (hay cuentas de
-      multiplication, resta y suma) en el menor tiempo posible.
+      El juego consiste en resolver {{ quantityExercises }} cuentas aleatorias
+      (hay cuentas de multiplication, resta y suma) en el menor tiempo posible.
     </p>
     <u>Controles:</u>
     <ul>
@@ -35,7 +41,7 @@ export default {
   data() {
     return {
       newGame: false,
-      quantityExercises: 15,
+      quantityExercises: 2,
       showTutorial: false,
     };
   },

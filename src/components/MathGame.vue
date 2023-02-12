@@ -17,6 +17,8 @@
   </form>
 
   <div v-if="isGameFinished" id="end-game">
+    <TimesBoard />
+
     <div class="info">
       <h2>CalculosX{{ quantityExercises }}</h2>
       <div class="block">
@@ -35,6 +37,7 @@
         <span class="block-value">{{ totalTime }} segundos</span>
       </div>
     </div>
+
     <InGameOptions @receiveGameOption="runGameOption" />
   </div>
 </template>
@@ -45,13 +48,15 @@ import {
   generateMultiplication,
   generateSubtraction,
 } from "@/helpers/Exercise";
+import { saveTime } from "@/helpers/TimeBoard";
 import Exercise from "@/components/Exercise";
 import InGameOptions from "@/components/InGameOptions";
+import TimesBoard from "@/components/TimesBoard";
 
 export default {
   name: "MathGame",
 
-  components: { Exercise, InGameOptions },
+  components: { Exercise, InGameOptions, TimesBoard },
 
   props: {
     quantityExercises: {
@@ -144,18 +149,24 @@ export default {
         }
         return result;
       });
-
       this.totalTime = this.seconds + this.missedExercises * 5;
+
+      // Son todos correctos
+      if (this.missedExercises === 0) {
+        saveTime(this.totalTime);
+      }
     },
     finishGame() {
       this.isGameFinished = true;
-      this.checkResults();
       this.stopTimer();
+      this.checkResults();
     },
     startNewGame() {
+      this.missedExercises = 0;
+      this.totalTime = 0;
+      this.exercises = [];
       this.stopTimer();
       this.isGameFinished = false;
-      this.exercises = [];
       this.generateExercises();
     },
     startTimer() {
@@ -214,8 +225,8 @@ ul {
 }
 
 #end-game h2 {
-margin: 0;
-text-decoration: underline;
+  margin: 0;
+  text-decoration: underline;
 }
 .info {
   display: flex;
