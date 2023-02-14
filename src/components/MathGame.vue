@@ -19,7 +19,7 @@
   </form>
 
   <div v-if="isGameFinished" id="end-game">
-    <TimesBoard />
+    <TimesBoard :newRecord="newTimeRecord" />
 
     <div class="info">
       <h2>CalculosX{{ quantityExercises }}</h2>
@@ -79,6 +79,8 @@ export default {
       seconds: 0,
       isGameFinished: false,
       isCountDownFinished: false,
+      isTimerRunning: false,
+      newTimeRecord: false,
     };
   },
 
@@ -160,7 +162,10 @@ export default {
 
       // Son todos correctos
       if (this.missedExercises === 0) {
-        saveTime(this.totalTime);
+        const { isNewRecord } = saveTime(this.totalTime);
+        if (isNewRecord) {
+          this.newTimeRecord = true;
+        }
       }
     },
     finishGame() {
@@ -169,6 +174,7 @@ export default {
       this.checkResults();
     },
     startNewGame() {
+      this.newTimeRecord = false;
       this.missedExercises = 0;
       this.totalTime = 0;
       this.exercises = [];

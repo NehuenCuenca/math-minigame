@@ -4,8 +4,6 @@
     <li class="option" @click="toggleTutorial">Tutorial</li>
   </ul>
 
-  
-
   <MathGame
     :quantityExercises="quantityExercises"
     v-if="newGame"
@@ -41,7 +39,7 @@ export default {
   data() {
     return {
       newGame: false,
-      quantityExercises: 15,
+      quantityExercises: 10,
       showTutorial: false,
     };
   },

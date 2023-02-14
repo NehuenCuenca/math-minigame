@@ -1,8 +1,9 @@
 export const getTimesSaved = () => JSON.parse(localStorage.getItem("times"));
 
 export const saveTime = (totalTime) => {
-  const areTimeSaved = getTimesSaved();
-  console.log(areTimeSaved);
+  const areTimeSaved = getTimesSaved() || [];
+  const isNewRecord = () =>
+    areTimeSaved.every((oldTime) => totalTime < oldTime);
 
   if (areTimeSaved && areTimeSaved.length > 0) {
     // pusheo el nuevo tiempo y ordeno el array
@@ -15,4 +16,9 @@ export const saveTime = (totalTime) => {
     const newTime = JSON.stringify([totalTime]);
     localStorage.setItem("times", newTime);
   }
+
+  return {
+    time: totalTime,
+    isNewRecord: isNewRecord(),
+  };
 };
