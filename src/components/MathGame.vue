@@ -1,5 +1,7 @@
 <template>
-  <form v-if="!isGameFinished">
+  <CountDown @onFinishCountDown="showGame" v-if="!isCountDownFinished" />
+
+  <form v-if="!isGameFinished && isCountDownFinished">
     <h1 id="timer" :class="seconds < 14 ? 'green' : 'yellow'">
       {{ seconds }}"
     </h1>
@@ -49,6 +51,7 @@ import {
   generateSubtraction,
 } from "@/helpers/Exercise";
 import { saveTime } from "@/helpers/TimeBoard";
+import CountDown from "@/components/CountDown";
 import Exercise from "@/components/Exercise";
 import InGameOptions from "@/components/InGameOptions";
 import TimesBoard from "@/components/TimesBoard";
@@ -56,7 +59,7 @@ import TimesBoard from "@/components/TimesBoard";
 export default {
   name: "MathGame",
 
-  components: { Exercise, InGameOptions, TimesBoard },
+  components: { Exercise, InGameOptions, TimesBoard, CountDown },
 
   props: {
     quantityExercises: {
@@ -75,12 +78,17 @@ export default {
       timer: null,
       seconds: 0,
       isGameFinished: false,
+      isCountDownFinished: false,
     };
   },
 
   emits: ["finishGame"],
 
   methods: {
+    showGame(boolean) {
+      this.isCountDownFinished = boolean;
+      this.startTimer();
+    },
     runGameOption(option) {
       this[option]();
     },
@@ -121,7 +129,6 @@ export default {
       }
 
       this.showExercise(0);
-      this.startTimer();
     },
     saveAnswer(resp) {
       const { id, answer } = resp;
@@ -167,10 +174,13 @@ export default {
       this.exercises = [];
       this.stopTimer();
       this.isGameFinished = false;
+      this.isCountDownFinished = false;
       this.generateExercises();
+      this.showGame();
     },
     startTimer() {
       this.seconds = 0;
+      clearInterval(this.timer);
       this.timer = setInterval(() => {
         this.seconds++;
       }, 1000);
@@ -249,17 +259,15 @@ ul {
 }
 
 .block-sub-title {
+  background-color: grey;
   color: white;
   font-size: 1.5rem;
   padding: 1rem;
   border-radius: 1rem;
 }
 
-.block-sub-title:nth-child(1) {
-  background-color: grey;
-}
-
 .block-value {
   font-size: 1.3rem;
+  color: black;
 }
 </style>

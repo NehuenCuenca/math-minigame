@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       newGame: false,
-      quantityExercises: 2,
+      quantityExercises: 15,
       showTutorial: false,
     };
   },

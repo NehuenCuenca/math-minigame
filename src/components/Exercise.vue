@@ -33,8 +33,10 @@ export default {
   methods: {
     clearInput() {
       this.answer = "";
+      this.setFocus();
     },
     saveAnswer() {
+      if( this.answer === null ) { this.answer = 0 }
       const { answer, id } = this;
 
       this.$emit("saveAnswer", { answer, id });
@@ -42,6 +44,7 @@ export default {
     },
     setFocus() {
       const input = this.$refs[`exercise${this.id}`];
+      if (!input) { return; }
       this.$nextTick(() => this.$refs[`exercise${this.id}`].focus());
     },
   },
